@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>精美CSS3聊天窗口DEMO演示</title>
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="css/bootstrap.css"  type="text/css" />
+	<link rel="stylesheet" href="css/button.css"  type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div id="convo" >
+	  <div class="subscribe">
+		  <div class="form-group">
+			  <input class="form-control" v-model.lazy="topic"  placeholder="订阅的主题: 输入字符串 如 'toppic1' ,多个主题就用逗号分隔 " style="background: transparent;color:white;">
+		  </div>
+	  </div>
+	  <span>
+		  <ul class="chat-thread">
+			<template v-for="message in messages" >
+
+	  			<li class="accept" v-if="message.isSubscribe">{{message.payload}}</li>
+	  			<li class="send" v-else>{{message.payload}}</li>
+			</template>
+		  </ul>
+	  </span>
+</div>
+	<div class="publish">
+		<div class="form-group">
+			<span>
+			<input class="form-control" v-model="sendTopic" placeholder="主题(只能是单个主题)" style="color:white; background: transparent; display: inline; width: 20%">
+			<input class="form-control" v-model="sendMeg" placeholder="请输入发布的信息" style="color:white; background: transparent; display: inline; width: 60%">
+			<button type="submit" @click="send" class="btn btn-success" style="background: transparent; display: inline; width: 18%">publish</button>
+			</span>
+		</div>
+	</div>
+</div>
+  <script>
+	  data={
+	  	messages:[],
+		topic:"",
+		sendMeg:"",
+		sendTopic:""
+	  }
+  </script>
+ <script src="./js/mqtt.min.js"></script>
+ <script src="./js/mymqtt.js"></script>
+ <script src="./js/vue.js"></script>
+  <script>
+	  var javbus = new Vue({
+		  el: '#main',
+		  data: data,
+		  methods:{
+			 send:function () {
+			 	if(this.sendTopic!==""&&this.sendMeg!==""){
+			 		send(this.sendTopic,this.sendMeg);
+				}
+			 }
+		  },
+		  watch:{
+		  	topic: function (newTopic,oldTopic) {
+				subscribe(newTopic.split(','),oldTopic.split(','));
+			}
+		  }
+
+	  });
+  </script>
+</body></html>

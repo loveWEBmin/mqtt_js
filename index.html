@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="./css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="./css/button.css" rel="stylesheet" type="text/css">
+    <link href="./css/loding.css" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        #main{
+            text-align:center;
+            padding-top: 200px;
+            margin: auto;
+        }
+        a{
+            margin-bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+<!--loding 特效-->
+<div class="spinner" id="loding">
+    <div class="rect1"></div>
+    <div class="rect2"></div>
+    <div class="rect3"></div>
+    <div class="rect4"></div>
+    <div class="rect5"></div>
+</div>
+<!--主页-->
+<div id="main"  style="display: none">
+    <a class="button button-pill button-giant" :class="bellClicked?'button-caution':'button-royal'" @click="send('bell')" >
+        {{bellClicked?'关闭':'开启'}}响铃</a>
+    <a class="button button-pill button-giant" :class="led1Clicked?'button-caution':'button-royal'" @click="send('led1')" >
+        {{led1Clicked?'关闭':'开启'}}led1</a>
+    <a   class="button button-pill button-giant" :class="led2Clicked?'button-caution':'button-royal'" @click="send('led2')" >
+        {{led2Clicked?'关闭':'开启'}}led2</a>
+    <a class="button button-pill button-giant" :class="led3Clicked?'button-caution':'button-royal'" @click="send('led3')" >
+        {{led3Clicked?'关闭':'开启'}}led3</a>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="./js/mqtt.min.js"></script>
+<script src="./js/mymqtt.js"></script>
+<script src="./js/vue.js"></script>
+<script>
+    var time=setInterval(function () {
+        if(isConnect){
+            $('div#main').css('display','block');
+            $("div#loding").css('display','none');
+            window.clearInterval(time);
+        }
+    },100);
+    var javbus = new Vue({
+        el: '#main',
+        data: {
+            led1Clicked:false,
+            led2Clicked:false,
+            led3Clicked:false,
+            bellClicked:false
+        },
+        methods:{
+            send:function (pin) {
+                if(isConnect){
+                    var message= new Object;
+                    message.work='true';
+                    if(pin==='bell'){
+                        message.pin=12;
+                        if(this.bellClicked){
+                            message.work='false';
+                        }
+                        this.bellClicked=!this.bellClicked;
+
+                    }else if(pin==='led1'){
+                        message.pin=7;
+                        if(this.led1Clicked){
+                            message.work='false';
+                        }
+                        this.led1Clicked=!this.led1Clicked;
+                    }else if(pin==='led2'){
+                        message.pin=32;
+                        if(this.led2Clicked){
+                            message.work='false';
+                        }
+                        this.led2Clicked=!this.led2Clicked;
+                    }else if(pin==='led3'){
+                        message.pin=18;
+                        if(this.led3Clicked){
+                            message.work='false';
+                        }
+                        this.led3Clicked=!this.led3Clicked;
+                    }
+
+                    send(JSON.stringify(message));
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
