@@ -1,10 +1,10 @@
 var hostname = 'lovemin.info',
-    port = 8083,
+    port = 8084,
     clientId = 'websocket_web_js',
     timeout = 5,
     keepAlive = 100,
     cleanSession = false,
-    ssl = false;
+    ssl = true;
     // userName = 'mao2080',
     // password = '123',
 var client = new Paho.MQTT.Client(hostname, port, clientId);
